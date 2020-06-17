@@ -50,11 +50,11 @@ public class EmployeeRepository {
 	public List<Employee> findAll() {
 		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count"
 				+ " FROM employees ORDER BY hire_date";
-		if(Objects.isNull(template.query(sql, EMPLOYEE_ROW_MAPPER))) {
-			List<Employee> employeeList=new ArrayList<Employee>();
+		if (Objects.isNull(template.query(sql, EMPLOYEE_ROW_MAPPER))) {
+			List<Employee> employeeList = new ArrayList<Employee>();
 			return employeeList;
-		}else {
-			List<Employee> employeeList=template.query(sql, EMPLOYEE_ROW_MAPPER);
+		} else {
+			List<Employee> employeeList = template.query(sql, EMPLOYEE_ROW_MAPPER);
 			return employeeList;
 		}
 	}
@@ -69,8 +69,14 @@ public class EmployeeRepository {
 		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count "
 				+ "FROM employees WHERE id=:id";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-		Employee employee = template.queryForObject(sql, param, EMPLOYEE_ROW_MAPPER);
-		return employee;
+		try {
+			Employee employee = template.queryForObject(sql, param, EMPLOYEE_ROW_MAPPER);
+			return employee;
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
+			// TODO: handle exception
+			return null;
+		}
+
 	}
 
 	/**

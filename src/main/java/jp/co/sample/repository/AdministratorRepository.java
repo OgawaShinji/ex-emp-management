@@ -25,8 +25,8 @@ public class AdministratorRepository {
 		Administrator administrator = new Administrator();
 		administrator.setId(rs.getInt("id"));
 		administrator.setName(rs.getString("name"));
-		administrator.setName(rs.getString("mail_address"));
-		administrator.setName(rs.getString("password"));
+		administrator.setMailAddress(rs.getString("mail_address"));
+		administrator.setPassword(rs.getString("password"));
 		return administrator;
 	};
 	@Autowired

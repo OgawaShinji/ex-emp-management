@@ -17,13 +17,24 @@ public class EmployeeService {
 	private EmployeeRepository employeeRepository;
 
 	/**
-	 * 従業員情報を全権取得するメソッドをリポジトリクラスから呼び出す
+	 * 従業員情報を全件取得するメソッドをリポジトリクラスから呼び出す
 	 * 
 	 * @return 取得したリストを返す
 	 */
 	public List<Employee> showList() {
 		List<Employee> employeeList = employeeRepository.findAll();
 		return employeeList;
+	}
+
+	/**
+	 * 従業員情報を一件取得するメソッドをリポジトリクラスから呼び出す
+	 * 
+	 * @param id
+	 * @return 取得した従業員情報を返す
+	 */
+	public Employee showDetail(Integer id) {
+		Employee employee = employeeRepository.load(id);
+		return employee;
 	}
 
 }
