@@ -1,6 +1,8 @@
 package jp.co.sample.repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -48,8 +50,13 @@ public class EmployeeRepository {
 	public List<Employee> findAll() {
 		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count"
 				+ " FROM employees ORDER BY hire_date";
-		List<Employee> employeeList = template.query(sql, EMPLOYEE_ROW_MAPPER);
-		return employeeList;
+		if(Objects.isNull(template.query(sql, EMPLOYEE_ROW_MAPPER))) {
+			List<Employee> employeeList=new ArrayList<Employee>();
+			return employeeList;
+		}else {
+			List<Employee> employeeList=template.query(sql, EMPLOYEE_ROW_MAPPER);
+			return employeeList;
+		}
 	}
 
 	/**
