@@ -56,11 +56,12 @@ public class AdministratorRepository {
 				+ " WHERE mail_address=:mailAddress AND password=:password";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("mailAddress", mailAddress).addValue("password",
 				password);
-		Administrator administrator = template.queryForObject(sql, param, ADMINISTRATOR_ROW_MAPPER);
-		if (Objects.isNull(administrator)) {
-			return null;
-		} else {
+		try {
+			Administrator administrator = template.queryForObject(sql, param, ADMINISTRATOR_ROW_MAPPER);
 			return administrator;
+		} catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+			// TODO: handle exception
+			return null;
 		}
 	}
 

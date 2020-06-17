@@ -1,7 +1,15 @@
 package jp.co.sample.controller;
 
+import java.util.Objects;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,16 +25,20 @@ public class AdministratorController {
 	@Autowired
 	private AdministratorService administratorService;
 
+	@Autowired
+	private HttpSession session;
+
 	/**
 	 * LoginFormオブジェクトをModelオブジェクトに格納するための処理
+	 * 
 	 * @return
 	 */
 	@ModelAttribute
 	public LoginForm setUpLoginForm() {
-		LoginForm form=new LoginForm();
+		LoginForm form = new LoginForm();
 		return form;
 	}
-	
+
 	/**
 	 * 従業員登録時のリクエストパラメータをModelオブジェクトに格納
 	 * 
@@ -64,12 +76,27 @@ public class AdministratorController {
 		administratorService.insert(administrator);
 		return "redirect:/";
 	}
+
 	/**
 	 * ログイン画面へフォワードする
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/")
 	public String toLogin() {
 		return "administrator/login.html";
+	}
+
+	@RequestMapping("/login")
+	public String login(@Valid LoginForm form, BindingResult result, Model model) {
+		if (Objects.isNull(administratorService.login(form.getMailAddress(), form.getPassword()))) {
+			result.rejectValue("mailAddress", null, "メールアドレスまたはパスワードが違います");
+			result.rejectValue("password", null, "メールアドレスまたはパスワードが違います");
+			return "administrator/login";
+		} else {
+			Administrator administrator = administratorService.login(form.getMailAddress(), form.getPassword());
+			session.setAttribute("administratorName", administrator.getName());
+			return "forward:/employee/showList";
+		}
 	}
 }

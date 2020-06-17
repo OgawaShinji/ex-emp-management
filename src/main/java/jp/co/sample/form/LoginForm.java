@@ -3,6 +3,7 @@ package jp.co.sample.form;
 public class LoginForm {
 
 	/**	メールアドレス */
+	
 	private String mailAddress;
 	/**	パスワード */
 	private String password;
