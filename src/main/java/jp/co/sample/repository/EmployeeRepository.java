@@ -43,7 +43,7 @@ public class EmployeeRepository {
 	private NamedParameterJdbcTemplate template;
 
 	/**
-	 * 従業員情報一覧を入社日順で取得するメソッド
+	 * 従業員情報一覧を入社日順で取得するSQLを実行するメソッド
 	 * 
 	 * @return 従業員情報一覧
 	 */
@@ -80,7 +80,7 @@ public class EmployeeRepository {
 	}
 
 	/**
-	 * 渡した従業員情報の扶養人数を変更するメソッド
+	 * 渡した従業員情報の扶養人数を変更するSQLを実行するメソッド
 	 * 
 	 * @param employee
 	 */

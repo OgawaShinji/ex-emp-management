@@ -87,6 +87,13 @@ public class AdministratorController {
 		return "administrator/login.html";
 	}
 
+	/**
+	 * 受け取ったメールアドレスとパスワードからログインできるかどうかを判断する
+	 * @param form
+	 * @param result
+	 * @param model
+	 * @return　ログインできれば従業員一覧画面へ、できなければログイン画面に戻る
+	 */
 	@RequestMapping("/login")
 	public String login(@Valid LoginForm form, BindingResult result, Model model) {
 		if (Objects.isNull(administratorService.login(form.getMailAddress(), form.getPassword()))) {
@@ -98,5 +105,14 @@ public class AdministratorController {
 			session.setAttribute("administratorName", administrator.getName());
 			return "forward:/employee/showList";
 		}
+	}
+	/**
+	 * ログアウトする
+	 * @return　ログイン画面に戻る
+	 */
+	@RequestMapping("/logout")
+	public String logout() {
+		session.invalidate();
+		return "redirect:/";
 	}
 }
