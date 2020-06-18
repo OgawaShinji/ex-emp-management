@@ -42,9 +42,14 @@
 							<div class="form-group">
 								<div class="row">
 									<div class="col-sm-12">
-										<label for="name"> 氏名: </label> <label class="error-messages">
-											氏名を入力してください </label> <input type="text" name="name" id="name"
-											th:field="*{name}" class="form-control" placeholder="山田太郎">
+										<div th:if="${#fields.hasErrors('name')}" class="form-group">
+											<div class="alert alert-danger">
+												<span th:errors="*{name}"></span>
+											</div>
+										</div>
+										<label for="name"> 氏名: </label> <input type="text" name="name"
+											id="name" th:field="*{name}" class="form-control"
+											placeholder="山田太郎">
 									</div>
 								</div>
 							</div>
@@ -52,8 +57,13 @@
 							<div class="form-group">
 								<div class="row">
 									<div class="col-sm-12">
-										<label for="mailAddress"> メールアドレス: </label> <label
-											class="error-messages"> メールアドレスを入力してください </label> <input
+										<div th:if="${#fields.hasErrors('mailAddress')}"
+											class="form-group">
+											<div class="alert alert-danger">
+												<span th:errors="*{mailAddress}"></span>
+											</div>
+										</div>
+										<label for="mailAddress"> メールアドレス: </label>  <input
 											type="text" name="mailAddress" id="mailAddress"
 											th:field="*{mailAddress}" class="form-control"
 											placeholder="yamada@mail.com">
@@ -64,8 +74,13 @@
 							<div class="form-group">
 								<div class="row">
 									<div class="col-sm-12">
-										<label for="passwaord"> パスワード: </label> <label
-											class="error-messages"> パスワードを入力してください </label> <input
+										<div th:if="${#fields.hasErrors('password')}"
+											class="form-group">
+											<div class="alert alert-danger">
+												<span th:errors="*{password}"></span>
+											</div>
+										</div>
+										<label for="passwaord"> パスワード: </label>  <input
 											type="password" name="password" id="password"
 											th:field="*{password}" class="form-control"
 											placeholder="password">

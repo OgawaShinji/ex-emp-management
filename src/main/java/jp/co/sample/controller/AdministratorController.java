@@ -67,7 +67,11 @@ public class AdministratorController {
 	 * @return
 	 */
 	@RequestMapping("/insert")
-	public String insert(InsertAdministratorForm form) {
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result) {
+		if (result.hasErrors()) {
+			return "administrator/insert.html";
+		}
+
 		Administrator administrator = new Administrator();
 		administrator.setName(form.getName());
 		administrator.setMailAddress(form.getMailAddress());
@@ -89,10 +93,11 @@ public class AdministratorController {
 
 	/**
 	 * 受け取ったメールアドレスとパスワードからログインできるかどうかを判断する
+	 * 
 	 * @param form
 	 * @param result
 	 * @param model
-	 * @return　ログインできれば従業員一覧画面へ、できなければログイン画面に戻る
+	 * @return ログインできれば従業員一覧画面へ、できなければログイン画面に戻る
 	 */
 	@RequestMapping("/login")
 	public String login(@Valid LoginForm form, BindingResult result, Model model) {
@@ -106,9 +111,11 @@ public class AdministratorController {
 			return "forward:/employee/showList";
 		}
 	}
+
 	/**
 	 * ログアウトする
-	 * @return　ログイン画面に戻る
+	 * 
+	 * @return ログイン画面に戻る
 	 */
 	@RequestMapping("/logout")
 	public String logout() {

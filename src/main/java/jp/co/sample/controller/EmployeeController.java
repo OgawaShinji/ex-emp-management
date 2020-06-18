@@ -6,6 +6,8 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -60,7 +62,15 @@ public class EmployeeController {
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public String update(UpdateEmployeeForm form) {
+	public String update(@Validated UpdateEmployeeForm form, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			Employee employeeHasAllinfo = employeeService.showDetail(Integer.parseInt(form.getId()));
+			model.addAttribute("employee", employeeHasAllinfo);
+			model.addAttribute("error", "1~999の数値を入力してください");
+			result.rejectValue("dependentsCount", null, "数値を入力してください");
+			return "employee/detail";
+		}
+
 		Employee employee = new Employee();
 		employee.setId(Integer.parseInt(form.getId()));
 		employee.setDependentsCount(Integer.parseInt(form.getDependentsCount()));
