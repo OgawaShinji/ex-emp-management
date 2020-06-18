@@ -1,4 +1,4 @@
-package jp.co.sample.domain;
+package jp.co.sample.form;
 
 import java.util.Date;
 
@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.Range;
  * @author rpuser
  *
  */
-public class Employee {
+public class EmployeeForm {
 
 	/** 従業員のid */
 	private Integer id;
@@ -26,7 +26,7 @@ public class Employee {
 	/** 従業員の性別 */
 	private String gender;
 	/** 従業員の入社日 */
-	private Date hireDate;
+	private String hireDate;
 	/** 従業員のメールアドレス */
 	private String mailAddress;
 	/** 従業員の郵便番号 */
@@ -40,28 +40,11 @@ public class Employee {
 	/** 従業員の特性 */
 	private String characteristics;
 	/** 従業員の扶養人数 */
+	@NotNull(message = "値を入力してください")
+	@Size(min = 1,max = 3)
 	private Integer dependentsCount;
 
-	public Employee() {
-	}
-
-	public Employee(Integer id, String name, String image, String gender, Date hireDate, String mailAddress,
-			String zipCode, String address, String telephone, Integer salary, String characteristics,
-			Integer dependentsCount) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.image = image;
-		this.gender = gender;
-		this.hireDate = hireDate;
-		this.mailAddress = mailAddress;
-		this.zipCode = zipCode;
-		this.address = address;
-		this.telephone = telephone;
-		this.salary = salary;
-		this.characteristics = characteristics;
-		this.dependentsCount = dependentsCount;
-	}
+	
 
 	@Override
 	public String toString() {
@@ -103,11 +86,15 @@ public class Employee {
 		this.gender = gender;
 	}
 
-	public Date getHireDate() {
+	
+
+	
+
+	public String getHireDate() {
 		return hireDate;
 	}
 
-	public void setHireDate(Date hireDate) {
+	public void setHireDate(String hireDate) {
 		this.hireDate = hireDate;
 	}
 

@@ -1,8 +1,11 @@
 package jp.co.sample.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.co.sample.domain.Employee;
+import jp.co.sample.form.EmployeeForm;
 import jp.co.sample.form.UpdateEmployeeForm;
 import jp.co.sample.service.EmployeeService;
 
@@ -27,6 +31,12 @@ public class EmployeeController {
 		UpdateEmployeeForm updateEmployeeForm = new UpdateEmployeeForm();
 		return updateEmployeeForm;
 	};
+
+	@ModelAttribute
+	private EmployeeForm setUpEmployeeForm() {
+		EmployeeForm employeeForm = new EmployeeForm();
+		return employeeForm;
+	}
 
 	/**
 	 * 従業員全件検索してリクエストスコープに格納
@@ -51,7 +61,11 @@ public class EmployeeController {
 	@RequestMapping("/showDetail")
 	public String showDetail(Integer id, Model model) {
 		Employee employee = employeeService.showDetail(id);
-		model.addAttribute("employee", employee);
+		EmployeeForm form=new EmployeeForm();
+		BeanUtils.copyProperties(employee,form );
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		form.setHireDate(dateFormat.format(employee.getHireDate()));
+		model.addAttribute("employeeForm", form);
 		return "employee/detail.html";
 	}
 
@@ -62,19 +76,30 @@ public class EmployeeController {
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public String update(@Validated UpdateEmployeeForm form, BindingResult result, Model model) {
+	public String update(@Validated EmployeeForm form, BindingResult result, Model model) {
 		if (result.hasErrors()) {
-			Employee employeeHasAllinfo = employeeService.showDetail(Integer.parseInt(form.getId()));
-			model.addAttribute("employee", employeeHasAllinfo);
-			model.addAttribute("error", "1~999の数値を入力してください");
-			result.rejectValue("dependentsCount", null, "数値を入力してください");
+			model.addAttribute("employeeForm", form);
 			return "employee/detail";
 		}
 
 		Employee employee = new Employee();
-		employee.setId(Integer.parseInt(form.getId()));
-		employee.setDependentsCount(Integer.parseInt(form.getDependentsCount()));
-		employeeService.update(employee);
+		
+		employee.setId(form.getId());
+		employee.setName(form.getName());
+		employee.setImage(form.getImage());
+		employee.setGender(form.getGender());
+		//employeeにhiredateをセットする
+		//formはstringで受け取ってくる。それをempにセットする。でも任意の文字列を変換しなければならない
+		
+		employee.setMailAddress(form.getMailAddress());
+		employee.setZipCode(form.getZipCode());
+		employee.setAddress(form.getAddress());
+		employee.setTelephone(form.getTelephone());
+		employee.setSalary(form.getSalary());
+		employee.setCharacteristics(form.getCharacteristics());
+		employee.setDependentsCount(form.getDependentsCount());
+
+		employeeService.update(form);
 		return "redirect:/employee/showList";
 	}
 

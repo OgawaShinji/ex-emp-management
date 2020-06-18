@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jp.co.sample.domain.Employee;
+import jp.co.sample.form.EmployeeForm;
 import jp.co.sample.repository.EmployeeRepository;
 
 @Service
@@ -40,8 +41,12 @@ public class EmployeeService {
 	 * 従業員情報を更新するメソッドをリポジトリクラスから呼び出す
 	 * @param employee
 	 */
-	public void update(Employee employee) {
+	public void update(EmployeeForm employee) {
 		employeeRepository.update(employee);
 	}
 
+	public Integer loadCount(Integer id) {
+		Integer employee= employeeRepository.loadCount(id);
+		return employee;
+	}
 }

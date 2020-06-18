@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import jp.co.sample.domain.Employee;
+import jp.co.sample.form.EmployeeForm;
 
 /**
  * 従業員情報を操作するリポジトリクラス
@@ -23,6 +24,11 @@ import jp.co.sample.domain.Employee;
 @Repository
 public class EmployeeRepository {
 
+	private static final RowMapper<Integer> COUNT_ROW_MAPPER=(rs,i)->{
+		Employee employee=new Employee();
+		employee.setDependentsCount(rs.getInt("dependents_count"));
+		return employee.getDependentsCount();
+	};
 	private static final RowMapper<Employee> EMPLOYEE_ROW_MAPPER = (rs, i) -> {
 		Employee employee = new Employee();
 		employee.setId(rs.getInt("id"));
@@ -78,13 +84,26 @@ public class EmployeeRepository {
 		}
 
 	}
+	public Integer loadCount(Integer id) {
+		String sql = "SELECT dependents_count "
+				+ "FROM employees WHERE id=:id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		try {
+			Integer employee = template.queryForObject(sql, param,COUNT_ROW_MAPPER);
+			return employee;
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
+			// TODO: handle exception
+			return null;
+		}
+
+	}
 
 	/**
 	 * 渡した従業員情報の扶養人数を変更するSQLを実行するメソッド
 	 * 
 	 * @param employee
 	 */
-	public void update(Employee employee) {
+	public void update(EmployeeForm employee) {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(employee);
 		String updateSql = "UPDATE employees SET dependents_count=:dependentsCount WHERE id=:id";
 		template.update(updateSql, param);
